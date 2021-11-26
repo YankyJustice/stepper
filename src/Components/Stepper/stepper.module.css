@@ -1,0 +1,16 @@
+.next {
+    padding: 10px;
+    border-radius: 10px;
+    margin-right: 5px;
+    width: 100px;
+    box-shadow: 2px 2px 2px grey;
+}
+
+.prev {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: black;
+    color:white;
+    width: 100px;
+    box-shadow: 2px 2px 2px grey;
+}
