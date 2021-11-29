@@ -1,8 +1,12 @@
-import {Input} from "../Input";
-import {useState} from "react";
+import {useState} from 'react';
+
+import {Input} from '../Input';
+import {validate} from '../../Service/validate';
+
 import style from './stepper.module.css'
 
 export const Stepper = ({formInputs}) => {
+
 	let initialValues = {}
 	formInputs.forEach(input => {
 		initialValues = {
@@ -17,38 +21,8 @@ export const Stepper = ({formInputs}) => {
 	const [formValues, setFormValues] = useState(initialValues)
 	const [step, setStep] = useState(0)
 
-	const validate = (currentInput) => {
-		let error = []
-		const name = currentInput.target.name
-		const value = currentInput.target.value
-		const options = formInputs.find(input => input.name === name)
-		if (options.max_length) {
-			!(value.length <= options.max_length) && error.push('error')
-		}
-		if (options.min_length) {
-			!(value.length >= options.min_length) && error.push('error')
-		}
-		if (options.type === 'EMAIL'){
-			const regExpForEmail = new RegExp(/\S+@\S+\.\S+/)
-			!regExpForEmail.test(value) && error.push('error')
-		}
-		if (options.regex) {
-			const regExp = new RegExp(options.regex)
-			!regExp.test(value) && error.push('error')
-		}
-		if (options.min) {
-			!(Number(value) >= Number(options.min)) && error.push('error')
-		}
-		if (options.max) {
-			!(Number(value) <= Number(options.max)) && error.push('error')
-		}
-
-		return error.length > 0 ? false : true
-
-	}
-
 	const changeValue = (e) => {
-		const valid = validate(e)
+		const valid = validate(e, formInputs)
 		setFormValues((prevValue) => (
 			{
 				...prevValue,
@@ -68,7 +42,7 @@ export const Stepper = ({formInputs}) => {
 	}
 
 	const prevStep = () => {
-		if (step>0) {
+		if (step > 0) {
 			setStep(step - 1)
 		}
 	}
@@ -85,8 +59,7 @@ export const Stepper = ({formInputs}) => {
 
 	return (
 		<div>
-			{formInputs.map((input, index) => {
-				return (
+			{formInputs.map((input, index) => (
 					<div>
 						<Input
 							changeValue={changeValue}
@@ -99,12 +72,13 @@ export const Stepper = ({formInputs}) => {
 						/>
 					</div>
 				)
-			})}
+			)}
 			{step < 3
 				?
 				<button onClick={nextStep} className={style.next}>Продолжить</button>
 				:
-				<button onClick={endStepper} className={style.next}>Завершить</button>}
+				<button onClick={endStepper} className={style.next}>Завершить</button>
+			}
 			<button onClick={prevStep} className={style.prev}>Назад</button>
 		</div>
 	)
